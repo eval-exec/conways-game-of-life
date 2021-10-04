@@ -5,3 +5,5 @@ cargo build
 
 cargo run
 ```
+## result
+![](./game-of-life.png)
