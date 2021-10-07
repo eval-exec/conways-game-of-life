@@ -1,11 +1,10 @@
-use std::borrow::Borrow;
-use termion::event::{Key, Event, MouseEvent};
-use termion::input::{TermRead, MouseTerminal};
-use termion::raw::IntoRawMode;
-use std::io::{Write, stdout, stdin};
-use rand;
 use rand::Rng;
-
+use std::io::{stdin, stdout, Read, Write};
+use termion::event::{Event, Key, MouseEvent};
+use termion::input::{MouseTerminal, TermRead};
+use termion::raw::IntoRawMode;
+use piston_window;
+use piston_window::Window;
 
 #[derive(PartialEq)]
 enum Live {
@@ -24,7 +23,6 @@ struct Board {
     height: usize,
 }
 
-
 const DIRECTIONS: [[i32; 2]; 8] = [
     [-1, -1],
     [-1, 0],
@@ -39,10 +37,13 @@ const DIRECTIONS: [[i32; 2]; 8] = [
 impl Board {
     fn new(width: usize, height: usize) -> Board {
         let mut board: Vec<Vec<Cell>> = Vec::new();
-        for i in 0..height {
+        for _ in 0..height {
             let mut line: Vec<Cell> = Vec::new();
             for w in 0..width {
-                line.push(Cell { live: Live::Alive, birth_day: 0 })
+                line.push(Cell {
+                    live: Live::Alive,
+                    birth_day: 0,
+                })
             }
             board.push(line);
         }
@@ -75,25 +76,28 @@ impl Board {
     }
 }
 
-
 struct Universe {
     twin: Vec<Board>,
     iboard: usize,
     now: u64,
     width: usize,
     height: usize,
-
 }
 
 impl Universe {
     fn new(width: usize, height: usize) -> Universe {
-        let mut u: Universe = Universe { iboard: 0, twin: vec![], now: 0, width: width, height: height };
+        let mut u: Universe = Universe {
+            iboard: 0,
+            twin: vec![],
+            now: 0,
+            width: width,
+            height: height,
+        };
         u.twin.push(Board::new(width, height));
         u.twin.push(Board::new(width, height));
 
         for h in 0..height {
             for w in 0..width {
-                let count = u.getBoard(0).alive_neighbors_count(w, h);
                 let mut live: Live;
                 if rand::thread_rng().gen_bool(1.0 / 2.0) {
                     live = Live::Alive;
@@ -136,15 +140,21 @@ impl Universe {
                         }
                     }
                 }
-                self.twin[now_i].set(w, h, Cell { live, birth_day: self.now })
+                self.twin[now_i].set(
+                    w,
+                    h,
+                    Cell {
+                        live,
+                        birth_day: self.now,
+                    },
+                )
             }
         }
         self.iboard = now_i;
     }
 }
 
-
-fn main() {
+fn console_game() {
     let mut width: usize = 0;
     let mut height: usize = 0;
 
@@ -159,15 +169,15 @@ fn main() {
     }
     let mut universe: Universe = Universe::new(width, height);
 
-
-    let stdin = stdin();
     let mut stdout = stdout().into_raw_mode().unwrap();
 
-    writeln!(stdout,
-             "{}{}{}Use the up/down arrow keys to change the blue in the rainbow.",
-             termion::clear::All,
-             termion::cursor::Goto(1, 1),
-             termion::cursor::Hide)
+    writeln!(
+        stdout,
+        "{}{}{}Use the up/down arrow keys to change the blue in the rainbow.",
+        termion::clear::All,
+        termion::cursor::Goto(1, 1),
+        termion::cursor::Hide
+    )
         .unwrap();
 
     writeln!(stdout, "{}", termion::clear::All).unwrap();
@@ -186,6 +196,72 @@ fn main() {
             }
         }
         stdout.flush().unwrap();
-        std::thread::sleep(std::time::Duration::from_millis(10));
+        std::thread::sleep(std::time::Duration::from_millis(1));
+    }
+}
+
+fn game_2d() {
+    let mut window: piston_window::PistonWindow =
+        piston_window::WindowSettings::new("game of life 2d", [920, 580])
+            .exit_on_esc(true).fullscreen(false).build().unwrap();
+
+    let window_size = window.size();
+    let color_dead = piston_window::color::BLACK;
+    let color_alive = piston_window::color::WHITE;
+
+    const cell_length: f64 = 4.0;
+    let cell_Rec = |w: f64, h: f64| -> [f64; 4]{
+        let _w = w * cell_length;
+        let _h = h * cell_length;
+        [_w, _h, cell_length, cell_length]
+    };
+    let height = (window_size.height as f64 / cell_length) as usize;
+    let width = (window_size.width as f64 / cell_length) as usize;
+
+    let mut universe: Universe = Universe::new(width, height);
+
+
+    while let Some(event) = window.next() {
+        window.draw_2d(&event, |context, graphics, _device| {
+            universe.tick();
+
+            piston_window::rectangle(color_dead,
+                                     [0.0, 0.0, 1920.0, 1080.0],
+                                     context.transform,
+                                     graphics);
+
+            let board = universe.getNowBoard();
+            for h in 0..height {
+                for w in 0..width {
+                    if board.is_alive(w, h) {
+                        piston_window::rectangle(color_alive,
+                                                 cell_Rec(w as f64, h as f64),
+                                                 context.transform,
+                                                 graphics);
+                    }
+                }
+            }
+            std::thread::sleep(std::time::Duration::from_millis(1));
+        });
+    }
+}
+
+fn game_3d() {}
+
+fn main() {
+    let pattern = std::env::args().nth(1).expect("no game mode given");
+    match pattern.as_str() {
+        "console" => {
+            console_game();
+        }
+        "2d" => {
+            game_2d()
+        }
+        "3d" => {
+            game_3d()
+        }
+        _ => {
+            println!("unknown game mode");
+        }
     }
 }
