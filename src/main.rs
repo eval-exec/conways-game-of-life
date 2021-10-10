@@ -202,14 +202,14 @@ fn console_game() {
 
 fn game_2d() {
     let mut window: piston_window::PistonWindow =
-        piston_window::WindowSettings::new("game of life 2d", [920, 580])
+        piston_window::WindowSettings::new("game of life 2d", [1920, 1080])
             .exit_on_esc(true).fullscreen(false).build().unwrap();
 
     let window_size = window.size();
     let color_dead = piston_window::color::BLACK;
     let color_alive = piston_window::color::WHITE;
 
-    const cell_length: f64 = 4.0;
+    const cell_length: f64 = 5.0;
     let cell_Rec = |w: f64, h: f64| -> [f64; 4]{
         let _w = w * cell_length;
         let _h = h * cell_length;
@@ -234,6 +234,7 @@ fn game_2d() {
             for h in 0..height {
                 for w in 0..width {
                     if board.is_alive(w, h) {
+                        piston_window::grid::GridCells::from()
                         piston_window::rectangle(color_alive,
                                                  cell_Rec(w as f64, h as f64),
                                                  context.transform,
@@ -241,7 +242,7 @@ fn game_2d() {
                     }
                 }
             }
-            std::thread::sleep(std::time::Duration::from_millis(1));
+            // std::thread::sleep(std::time::Duration::from_millis(1));
         });
     }
 }
