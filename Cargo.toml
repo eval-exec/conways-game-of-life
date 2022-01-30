@@ -13,3 +13,4 @@ rand = "0.8.4"
 piston_window = "*"
 kiss3d = "0.30.0"
 random_color = "0.6.1"
+clap = { version = "3.0.13", features = ["derive"]  }

@@ -1,12 +1,15 @@
+use std::io::{stdin, stdout, Read, Write};
+
 use piston_window;
-use piston_window::types::ColorComponent;
+use piston_window::color::BLACK;
+use piston_window::types::{Color, ColorComponent};
 use piston_window::{PistonWindow, Window};
 use rand::{random, Rng};
 use random_color;
-use std::io::{stdin, stdout, Read, Write};
 use termion::event::{Event, Key, MouseEvent};
 use termion::input::{MouseTerminal, TermRead};
 use termion::raw::IntoRawMode;
+use tui::style::Color::Black;
 
 #[derive(PartialEq)]
 enum Live {
@@ -16,6 +19,7 @@ enum Live {
 
 struct Cell {
     live: Live,
+    color: Color,
     birth_day: u64,
 }
 
@@ -44,6 +48,7 @@ impl Board {
             for w in 0..width {
                 line.push(Cell {
                     live: Live::Alive,
+                    color: BLACK,
                     birth_day: 0,
                 })
             }
@@ -106,7 +111,15 @@ impl Universe {
                 } else {
                     live = Live::Dead;
                 }
-                u.twin[0].set(w, h, Cell { live, birth_day: 0 })
+                u.twin[0].set(
+                    w,
+                    h,
+                    Cell {
+                        live,
+                        color: BLACK,
+                        birth_day: 0,
+                    },
+                )
             }
         }
         u
@@ -114,9 +127,14 @@ impl Universe {
     fn get_now_board(&mut self) -> &Board {
         &self.twin[self.iboard]
     }
+
+    fn get_pre_board(&mut self) -> &Board {
+        &self.twin[(self.iboard + 1) % 2]
+    }
     fn get_board(&mut self, i: usize) -> &Board {
         &self.twin[i]
     }
+
     fn tick(&mut self) {
         let prev_i = self.iboard;
         let now_i = (prev_i + 1) % 2;
@@ -147,6 +165,7 @@ impl Universe {
                     h,
                     Cell {
                         live,
+                        color: BLACK,
                         birth_day: self.now,
                     },
                 )
@@ -213,7 +232,7 @@ pub fn game_2d() {
     let window_size = window.size();
     let color_dead = piston_window::color::BLACK;
 
-    const CELL_LENGTH: f64 = 20.0;
+    const CELL_LENGTH: f64 = 5.0;
     let cell_Rec = |w: f64, h: f64| -> [f64; 4] {
         let _w = w * CELL_LENGTH;
         let _h = h * CELL_LENGTH;
@@ -235,12 +254,18 @@ pub fn game_2d() {
                 graphics,
             );
 
-            let board = universe.get_now_board();
             for h in 0..height {
                 for w in 0..width {
-                    if board.is_alive(w, h) {
-                        let color_alive: piston_window::types::Color =
-                            colors[rand::thread_rng().gen_range(0..colors.len())];
+                    if universe.twin[universe.iboard].is_alive(w, h) {
+                        let color_alive: piston_window::types::Color;
+
+                        if universe.twin[(universe.iboard + 1) % 2].is_alive(w, h) {
+                            color_alive =
+                                universe.twin[(universe.iboard + 1) % 2].board[h][w].color;
+                        } else {
+                            color_alive = colors[rand::thread_rng().gen_range(0..colors.len())];
+                        }
+                        universe.twin[universe.iboard].board[h][w].color = color_alive;
                         piston_window::rectangle(
                             color_alive,
                             cell_Rec(w as f64, h as f64),
@@ -250,7 +275,7 @@ pub fn game_2d() {
                     }
                 }
             }
-            std::thread::sleep(std::time::Duration::from_millis(100));
+            // std::thread::sleep(std::time::Duration::from_millis(500));
         });
     }
 }

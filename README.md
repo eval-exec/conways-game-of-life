@@ -6,7 +6,7 @@ cargo build
 cargo run
 ```
 ## result
-![](./color-2d.png)
-![](./color-3d.png)
-![](./game-of-life.gif)
-![](./game-of-life.png)
+![](./assets/color-2d.png)
+![](./assets/color-3d.png)
+![](./assets/game-of-life.gif)
+![](./assets/game-of-life.png)

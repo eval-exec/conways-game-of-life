@@ -23,7 +23,7 @@ impl Cell {
         if !self.alive {
             self.alive = true;
             self.birth_time = std::time::SystemTime::now();
-            self.scene = wd.add_sphere(0.4);
+            self.scene = wd.add_cube(0.9, 0.9, 0.9);
             self.scene.set_color(random(), random(), random());
             self.scene
                 .set_local_translation(kiss3d::nalgebra::Translation3::new(x, y, z))
@@ -93,13 +93,13 @@ impl Universe {
                             && z >= 0
                             && z < self.len_z as i32
                             && self.universe_twin[prev_idx][x as usize][y as usize][z as usize]
-                                .alive
+                            .alive
                         {
                             count += 1;
                         }
                     }
 
-                    if grim_reaper(count) {
+                    if grim_reaper(self.universe_twin[prev_idx][ix][iy][iz].alive(), count) {
                         self.universe_twin[now_idx][ix][iy][iz]
                             .born(wd, ix as f32, iy as f32, iz as f32)
                     } else {
@@ -113,10 +113,10 @@ impl Universe {
     }
 }
 
-fn grim_reaper(count: u8) -> bool {
+fn grim_reaper(live: bool, count: u8) -> bool {
     match count {
-        0..=2 => false,
-        3..=4 => true,
+        2 => live,
+        3 => true,
         _ => false,
     }
 }
@@ -155,22 +155,21 @@ const DIRECTIONS: [[i32; 3]; 8 + 9 + 9] = [
 
 pub fn game_3d() {
     let mut window = kiss3d::window::Window::new("Conway's game of life");
-    let lenx = 20;
-    let leny = 20;
-    let lenz = 10;
+    let lenx = 40;
+    let leny = 40;
+    let lenz = 1;
     let mut universe = Universe::new(lenx, leny, lenz);
     universe.init(&mut window);
 
     // let eye = kiss3d::nalgebra::Point3::new(lenx as f32 / 2.0, leny as f32 / 2.0, lenx as f32);
-    let eye =
-        kiss3d::nalgebra::Point3::new(lenx as f32 * 1.9, leny as f32 * 1.8, lenx as f32 * 1.2);
-    let at = kiss3d::nalgebra::Point3::new(0.0, 0.0, 0.0);
+    let eye = kiss3d::nalgebra::Point3::new(lenx as f32 / 2.0, leny as f32 / 2.0, lenx as f32);
+    let at = kiss3d::nalgebra::Point3::new(lenx as f32 / 2.0, leny as f32 / 2.0, 0.0);
     let mut first_person = kiss3d::camera::FirstPerson::new(eye, at);
     while window.render_with_camera(&mut first_person) {
         universe.tick(&mut window);
         for mut event in window.events().iter() {
             if let kiss3d::event::WindowEvent::Key(button, kiss3d::event::Action::Press, _) =
-                event.value
+            event.value
             {
                 if button == kiss3d::event::Key::Q {
                     println!("You pressed the button: {:?}", button);
