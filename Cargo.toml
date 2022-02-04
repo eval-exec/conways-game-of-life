@@ -1,16 +1,37 @@
 [package]
-name = "game-of-life-2d"
+name = "game-of-life"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
+description = ""
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "game_of_life"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+#[[bin]]
+#name = "game-of-life-bin"
+#path = "src/bin/main.rs"
+
 
 [dependencies]
-tui = "0.16.0"
-termion = "1.5"
-emoji = "0.2.1"
-rand = "0.8.4"
-piston_window = "*"
-kiss3d = "0.30.0"
-random_color = "0.6.1"
-clap = { version = "3.0.13", features = ["derive"]  }
+#tui = "0.16.0"
+#termion = "1.5"
+getrandom = { version = "0.2", features = ["js"] }
+#piston_window = "*"
+#kiss3d = "0.30.0"
+#random_color = "0.6.1"
+#getrandom = { version = "0.2.4", features = ["js"] }
+#clap = { version = "3.0.13", features = ["derive"] }
+wasm-bindgen = "0.2.74"
+chrono = {version = "0.4.19", features = ["wasmbind"]}
+
+[dependencies.web-sys]
+version = "0.3.4"
+features = [
+    'CanvasRenderingContext2d',
+    'Document',
+    'Element',
+    'HtmlCanvasElement',
+    'Window',
+]

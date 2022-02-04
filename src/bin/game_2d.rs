@@ -1,15 +1,11 @@
-use std::io::{stdin, stdout, Read, Write};
+use std::io::{stdout, Read, Write};
 
 use piston_window;
 use piston_window::color::BLACK;
-use piston_window::types::{Color, ColorComponent};
-use piston_window::{PistonWindow, Window};
-use rand::{random, Rng};
-use random_color;
-use termion::event::{Event, Key, MouseEvent};
-use termion::input::{MouseTerminal, TermRead};
+use piston_window::types::Color;
+use piston_window::Window;
+use rand::Rng;
 use termion::raw::IntoRawMode;
-use tui::style::Color::Black;
 
 #[derive(PartialEq)]
 enum Live {

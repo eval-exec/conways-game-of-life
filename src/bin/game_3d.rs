@@ -1,5 +1,3 @@
-use kiss3d::camera::Camera;
-use kiss3d::window::Window;
 use rand::random;
 
 #[derive(Clone)]
@@ -93,7 +91,7 @@ impl Universe {
                             && z >= 0
                             && z < self.len_z as i32
                             && self.universe_twin[prev_idx][x as usize][y as usize][z as usize]
-                            .alive
+                                .alive
                         {
                             count += 1;
                         }
@@ -169,7 +167,7 @@ pub fn game_3d() {
         universe.tick(&mut window);
         for mut event in window.events().iter() {
             if let kiss3d::event::WindowEvent::Key(button, kiss3d::event::Action::Press, _) =
-            event.value
+                event.value
             {
                 if button == kiss3d::event::Key::Q {
                     println!("You pressed the button: {:?}", button);

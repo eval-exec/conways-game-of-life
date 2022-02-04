@@ -1,7 +1,7 @@
 use clap::Parser;
 
-mod game_2d;
-mod game_3d;
+pub mod game_2d;
+pub mod game_3d;
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]
