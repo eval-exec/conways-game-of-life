@@ -1,4 +1,6 @@
 # Conways' Game of Life
+## rust-wasm preview
+https://eval-exec.github.io/conways-game-of-life/
 ## run
 ```bash
 cargo build
