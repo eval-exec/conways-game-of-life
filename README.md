@@ -3,9 +3,18 @@
 https://eval-exec.github.io/conways-game-of-life/
 ## run
 ```bash
-cargo build
 
-cargo run
+git clone https://github.com/eval-exec/conways-game-of-life.git
+
+cd conways-game-of-life
+
+cargo install wasm-pack
+
+wasm-pack build --target web
+
+python -m http.server
+
+# then open your web browser and visit http://127.0.0.1:8000
 ```
 ## result
 ![](./assets/color-2d.png)
