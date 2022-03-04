@@ -77,6 +77,21 @@ impl Board {
         }
         count
     }
+
+    // calculate board live cells and dead cells count
+    fn cell_statics(&mut self) -> (usize, usize) {
+        let mut lives: usize = 0;
+
+        for h in 0..self.height {
+            for w in 0..self.width {
+                if self.board[h][w].live == Live::Alive {
+                    lives += 1;
+                }
+            }
+        }
+        let deads = self.height * self.width - lives;
+        (lives, deads)
+    }
 }
 
 struct Universe {
