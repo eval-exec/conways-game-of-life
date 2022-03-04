@@ -1,0 +1,15 @@
+[package]
+name = "bin"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tui = "0.16.0"
+termion = "1.5"
+piston_window = "*"
+kiss3d = "0.30.0"
+random_color = "0.6.1"
+clap = { version = "3.0.13", features = ["derive"] }
+rand = "0.8.5"

@@ -3,7 +3,13 @@
 https://eval-exec.github.io/conways-game-of-life/
 ## run
 ```bash
+
+git clone https://github.com/eval-exec/conways-game-of-life.git
+
+cd conways-game-of-life
+
 cargo install wasm-pack
+
 wasm-pack build --target web
 
 python -m http.server
