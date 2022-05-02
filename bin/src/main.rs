@@ -1,5 +1,6 @@
 use clap::Parser;
 
+pub mod cube;
 pub mod game_2d;
 pub mod game_3d;
 
@@ -25,6 +26,7 @@ fn main() {
         "console" => game_2d::console_game(), // TODO exit game-of-life on key('q' or 'ESC') hit
         "2d" => game_2d::game_2d(),
         "3d" => game_3d::game_3d(),
+        "cube" => cube::cube(),
         _ => {
             println!("unknown game mode");
         }
