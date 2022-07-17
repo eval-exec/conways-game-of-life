@@ -2,5 +2,6 @@
 
 members = [
     "bin",
-    "wasm"
+    "wasm_2d",
+    "wasm_3d"
 ]

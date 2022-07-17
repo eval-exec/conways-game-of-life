@@ -1,5 +1,5 @@
 [package]
-name = "wasm"
+name = "wasm_2d"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,16 +9,9 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-#tui = "0.16.0"
-#termion = "1.5"
 getrandom = { version = "0.2", features = ["js"] }
-#piston_window = "*"
-#kiss3d = "0.30.0"
-#random_color = "0.6.1"
-#getrandom = { version = "0.2.4", features = ["js"] }
-#clap = { version = "3.0.13", features = ["derive"] }
-wasm-bindgen = "0.2.74"
-chrono = {version = "0.4.19", features = ["wasmbind"]}
+wasm-bindgen = "0.2.80"
+chrono = { version = "0.4.19", features = ["wasmbind"] }
 
 [dependencies.web-sys]
 version = "0.3.4"

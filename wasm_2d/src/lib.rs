@@ -8,8 +8,8 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 // Define the size of our "checkerboard"
-pub const CHECKERBOARD_SIZE: usize = 300;
-pub const TICKTIMEOUT: usize = 50;
+pub const CHECKERBOARD_SIZE: usize = 100;
+pub const TICKTIMEOUT: usize = 10;
 
 #[wasm_bindgen]
 pub fn get_checkerboard_size() -> usize {

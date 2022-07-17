@@ -1,8 +1,8 @@
-import wasmInit, {Universe} from "./wasm/pkg/wasm.js";
+import wasmInit, {Universe} from "./pkg/wasm.js";
 
 const runWasm = async () => {
     // Instantiate our wasm module
-    const rustWasm = await wasmInit("./wasm/pkg/wasm_bg.wasm");
+    const rustWasm = await wasmInit("/wasm/pkg/wasm_bg.wasm");
 
     // Create a Uint8Array to give us access to Wasm Memory
     const wasmByteMemoryArray = new Uint8Array(rustWasm.memory.buffer);
