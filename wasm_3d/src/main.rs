@@ -155,7 +155,7 @@ fn rand_color() -> rgb::RGB8 {
 }
 
 fn main() {
-    let mut window = Window::new_with_size("Happy Birthday! Eval EXEC!", 3840, 2160);
+    let mut window = Window::new("Happy Birthday! @EXEC!" );
     window.set_light(Light::StickToCamera);
 
     let radious: f32 = 90.0;
@@ -245,13 +245,13 @@ fn main() {
     };
     display_text("Happy", 0);
     display_text("Birthday", 1);
-    display_text("EXEC", 2);
+    display_text("@EXEC", 2);
     text_body.set_local_translation(Translation3::new(
         0.0 - (text_grid_width * 16 * 3) as f32,
         0.0,
         0.0 - (text_grid_width * 25) as f32,
     ));
-    nodes.push(text_body);
+    // nodes.push(text_body);
 
     // let mut base_cylinder = window.add_cylinder(1.0, 0.5);
     // let mut second_cylinder = window.add_cylinder(0.8, 0.5);
@@ -261,9 +261,9 @@ fn main() {
 
     let eye_target_ratio = 3.0;
     let eye = Point3::new(
+        radious * eye_target_ratio/2.0,
         radious * eye_target_ratio,
-        radious * eye_target_ratio,
-        radious * eye_target_ratio,
+        radious * eye_target_ratio/2.0,
     );
     let at = Point3::new(0.0, (height as u32 * grid_width) as f32, 0.0);
     let mut first_person = FirstPerson::new(eye, at);

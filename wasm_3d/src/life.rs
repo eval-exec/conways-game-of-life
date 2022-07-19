@@ -160,6 +160,9 @@ impl Universe {
                         }
                     }
                 }
+                if fastrand::u32(0..100) == 0{
+                    live = Live::Alive;
+                }
                 self.twin[now_i].set(w, h, Cell { live });
                 cf(h, w, live)
             }
