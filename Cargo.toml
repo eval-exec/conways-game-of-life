@@ -3,5 +3,6 @@
 members = [
     "bin",
     "wasm_2d",
-    "birthday_cake"
+    "birthday_cake",
+    "game-of-life"
 ]
