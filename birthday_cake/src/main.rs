@@ -6,13 +6,13 @@ use fastrand::{f32, f64, u32, usize};
 use kiss3d::camera::FirstPerson;
 use kiss3d::light::Light;
 use kiss3d::ncollide3d::na;
-use kiss3d::ncollide3d::procedural::{IndexBuffer, TriMesh, utils};
+use kiss3d::ncollide3d::procedural::{utils, IndexBuffer, TriMesh};
 use kiss3d::ncollide3d::simba::scalar::RealField;
 use kiss3d::resource::Mesh;
 use kiss3d::scene::{PlanarSceneNode, SceneNode};
 use kiss3d::window::Window;
 use nalgebra::{
-    Isometry2, Isometry3, Point2, Point3, Translation, Translation3, U24, UnitQuaternion, Vector3,
+    Isometry2, Isometry3, Point2, Point3, Translation, Translation3, UnitQuaternion, Vector3, U24,
 };
 
 use crate::color::color::{BLACK, WHITE, YELLOW};
@@ -155,7 +155,7 @@ fn rand_color() -> rgb::RGB8 {
 }
 
 fn main() {
-    let mut window = Window::new("Happy Birthday! @EXEC!" );
+    let mut window = Window::new("Happy Birthday! @EXEC!");
     window.set_light(Light::StickToCamera);
 
     let radious: f32 = 90.0;
@@ -226,8 +226,11 @@ fn main() {
 
                 for i in 1..=12 {
                     if (1 << (12 - i + 1)) & row > 0 {
-                        let mut cube =
-                            one_char.add_cube(text_grid_width as f32, text_grid_width as f32, text_grid_width as f32);
+                        let mut cube = one_char.add_cube(
+                            text_grid_width as f32,
+                            text_grid_width as f32,
+                            text_grid_width as f32,
+                        );
                         cube.set_local_translation(Translation3::new(
                             text_grid_width as f32 * i as f32,
                             0.0,
@@ -261,16 +264,14 @@ fn main() {
 
     let eye_target_ratio = 3.0;
     let eye = Point3::new(
-        radious * eye_target_ratio/2.0,
+        radious * eye_target_ratio / 2.0,
         radious * eye_target_ratio,
-        radious * eye_target_ratio/2.0,
+        radious * eye_target_ratio / 2.0,
     );
     let at = Point3::new(0.0, (height as u32 * grid_width) as f32, 0.0);
     let mut first_person = FirstPerson::new(eye, at);
 
-
     let rot = UnitQuaternion::from_axis_angle(&Vector3::y_axis(), 0.01);
-
 
     while window.render_with_camera(&mut first_person) {
         // let zero = Point3::new(0.0, 0.0, 0.0);
